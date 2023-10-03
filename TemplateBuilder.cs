@@ -5,10 +5,10 @@ using AngleSharp.Html.Parser;
 
 namespace TemplateSharp;
 
-class TemplateCompiler
+class TemplateBuilder
 {
     public ArgumentPack Arguments { get; private set; }
-    public TemplateCompiler(ArgumentPack arguments)
+    public TemplateBuilder(ArgumentPack arguments)
     {
         Arguments = arguments;
     }
@@ -24,9 +24,9 @@ class TemplateCompiler
         {
             skip.Remove();
         }
-    
-        ReplaceAttributes(document, attributes);
+
         CheckRequirements(document, attributes);
+        ReplaceAttributes(document, attributes);
 
         foreach (var inclusion in inclusions)
         {
@@ -93,6 +93,8 @@ class TemplateCompiler
             }
         }
 
+        MoveHeadData(document);
+
         return document;
     }
 
@@ -150,6 +152,17 @@ class TemplateCompiler
                 }
             }
 
+            tag.Remove();
+        }
+    }
+
+    private void MoveHeadData(IHtmlDocument document)
+    {
+        var headdataTags = document.QuerySelectorAll("headdata");
+
+        foreach (var tag in headdataTags)
+        {
+            document.Head?.AppendNodes(tag.ChildNodes.ToArray());
             tag.Remove();
         }
     }

@@ -1,6 +1,6 @@
 namespace TemplateSharp;
 
-internal class ArgumentPack
+public class ArgumentPack
 {
     public string Path { get; private set; } = "";
     public string Output { get; private set; } = "";
